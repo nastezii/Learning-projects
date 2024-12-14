@@ -108,7 +108,23 @@ void SearchBook(Library library)
 }
 
 namespace LibraryManagement
-{ 
+{
+    class Book
+    {
+        public string Title { get; set; }
+        public string Author { get; set; }
+        public int Year { get; set; }
+        public Genre Genre { get; set; }
+    }
+
+    enum Genre
+    {
+        fiction,
+        nonFiction,
+        science,
+        history
+    }
+
     class Library
     {
         static private List<Book> books = new List<Book>();
@@ -186,22 +202,5 @@ namespace LibraryManagement
                 Console.WriteLine($"Title: {book.Title}, Author: {book.Author}, Year: {book.Year}, Genre: {book.Genre}");
             }
         }
-    }
-
-
-    class Book
-    {
-        public string Title { get; set; }
-        public string Author { get; set; }
-        public int Year { get; set; }
-        public Genre Genre { get; set; }
-    }
-
-    enum Genre
-    {
-        fiction,
-        nonFiction,
-        science,
-        history
     }
 }
