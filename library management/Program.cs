@@ -1,4 +1,75 @@
-﻿class Library
+﻿void AddBook(Library library)
+{
+    Console.WriteLine("\nAdding a new book...");
+
+    Console.WriteLine("Enter title:");
+    string title = Console.ReadLine()?.Trim();
+    if (string.IsNullOrEmpty(title))
+    {
+        Console.WriteLine("Title cannot be empty. Book not added.");
+        return;
+    }
+
+    Console.Write("Enter author: ");
+    string author = Console.ReadLine()?.Trim();
+    if (string.IsNullOrEmpty(author))
+    {
+        Console.WriteLine("Author cannot be empty. Book not added.");
+        return;
+    }
+
+    Console.Write("Enter year: ");
+    string year = Console.ReadLine()?.Trim();
+    int parsedYear;
+    while (!int.TryParse(year, out parsedYear) || parsedYear <= 0)
+    {
+        Console.WriteLine("Invalid year. Please enter a valid positive number.");
+        Console.Write("Enter year: ");
+        year = Console.ReadLine()?.Trim();
+    }
+
+    Console.Write("Enter genre (fiction, nonFiction, science, history): ");
+    string genre = Console.ReadLine()?.Trim();
+    Genre parsedGenre;
+    while (!Enum.TryParse(genre, true, out parsedGenre))
+    {
+        Console.Write("Invalid genre. Please enter a valid genre (fiction, nonFiction, science, history): ");
+        genre = Console.ReadLine()?.Trim();
+    }
+
+    if (library.AddBook(title, author, parsedYear, parsedGenre))
+    {
+        Console.WriteLine("Book added successfully.");
+    }
+    else
+    {
+        Console.WriteLine("Book already exists in the library.");
+    }
+}
+
+
+void DeleteBook(Library library)
+{
+    Console.WriteLine("Enter the name of the book, which you want to delete:");
+    string input = Console.ReadLine()?.Trim();
+    library.DeleteBook(input);
+}
+
+
+void SearchBook(Library library)
+{
+    Console.Write("\nEnter title or author to search: ");
+    string input = Console.ReadLine();
+    if (string.IsNullOrWhiteSpace(input))
+    {
+        Console.WriteLine("Search query cannot be empty.");
+        return;
+    }
+    library.SearchBook(input);
+}
+
+
+class Library
 {
     static private List<Book> books = new List<Book>();
     public bool AddBook(string title, string author, int year, Genre genre)
