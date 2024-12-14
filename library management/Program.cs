@@ -1,4 +1,42 @@
-﻿void AddBook(Library library)
+﻿
+//library management
+
+Console.WriteLine("Commands:\nAdd book\n Delete book\nSearch book\nPrint sorted books");
+Console.WriteLine("To finish enter \"Finish\".");
+string option;
+bool runing = true;
+Library library = new Library();
+
+while (runing)
+{
+    Console.Write("\nEnter command: ");
+    option = Console.ReadLine();
+    switch (option)
+    {
+        case "Add book":
+            AddBook(library);
+            break;
+        case "Delete book":
+            DeleteBook(library);
+            break;
+        case "Search book":
+            SearchBook(library);
+            break;
+        case "Print sorted books":
+            library.PrintSortedBooks();
+            break;
+        case "Finish":
+            runing = false;
+            Console.WriteLine("Exiting the program.");
+            break;
+        default:
+            Console.WriteLine("Invalid option. Please, try again.");
+            break;
+    }
+}
+
+
+void AddBook(Library library)
 {
     Console.WriteLine("\nAdding a new book...");
 
