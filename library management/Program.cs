@@ -1,5 +1,6 @@
 ﻿
 //library management
+using LibraryManagement;
 
 Console.WriteLine("Commands:\nAdd book\n Delete book\nSearch book\nPrint sorted books");
 Console.WriteLine("To finish enter \"Finish\".");
@@ -106,41 +107,81 @@ void SearchBook(Library library)
     library.SearchBook(input);
 }
 
-
-class Library
-{
-    static private List<Book> books = new List<Book>();
-    public bool AddBook(string title, string author, int year, Genre genre)
+namespace LibraryManagement
+{ 
+    class Library
     {
-        if (books.Any(book => book.Title.Equals(title, StringComparison.OrdinalIgnoreCase)
-            && book.Author.Equals(author, StringComparison.OrdinalIgnoreCase)))
+        static private List<Book> books = new List<Book>();
+        public bool AddBook(string title, string author, int year, Genre genre)
         {
-            return false;
+            if (books.Any(book => book.Title.Equals(title, StringComparison.OrdinalIgnoreCase)
+                && book.Author.Equals(author, StringComparison.OrdinalIgnoreCase)))
+            {
+                return false;
+            }
+
+            books.Add(new Book { Title = title, Author = author, Year = year, Genre = genre });
+            return true;
+        }
+        public void SearchBook(string input)
+        {
+            if (books.Count == 0)
+            {
+                Console.WriteLine("No books in the library.");
+                return;
+            }
+            Console.WriteLine("Searching for a book...");
+            var results = books.Where
+            (book => book.Title.Contains(input, StringComparison.OrdinalIgnoreCase)
+            || book.Author.Contains(input, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+            if (results.Count == 0)
+            {
+                Console.WriteLine("No books found matching your search.");
+            }
+            else
+            {
+                Console.WriteLine("Search results:");
+                foreach (var book in results)
+                {
+                    Console.WriteLine($"Title: {book.Title}, Author: {book.Author}, Year: {book.Year}, Genre: {book.Genre}");
+                }
+            }
         }
 
-        books.Add(new Book { Title = title, Author = author, Year = year, Genre = genre });
-        return true;
-    }
-    public void SearchBook(string input)
-    {
-        if (books.Count == 0)
+
+        public void DeleteBook(string input)
         {
-            Console.WriteLine("No books in the library.");
-            return;
+            if (string.IsNullOrEmpty(input))
+            {
+                Console.WriteLine("Book title cannot be empty.");
+                return;
+            }
+
+            var bookToDelete = books.FirstOrDefault(book => book.Title.Equals(input, StringComparison.OrdinalIgnoreCase));
+
+            if (bookToDelete != null)
+            {
+                books.Remove(bookToDelete);
+                Console.WriteLine($"The book \"{bookToDelete.Title}\" has been removed from the library.");
+            }
+            else
+            {
+                Console.WriteLine($"No book with the title \"{input}\" was found in the library.");
+            }
         }
-        Console.WriteLine("Searching for a book...");
-        var results = books.Where
-        (book => book.Title.Contains(input, StringComparison.OrdinalIgnoreCase)
-        || book.Author.Contains(input, StringComparison.OrdinalIgnoreCase))
-        .ToList();
-        if (results.Count == 0)
+
+
+        public void PrintSortedBooks()
         {
-            Console.WriteLine("No books found matching your search.");
-        }
-        else
-        {
-            Console.WriteLine("Search results:");
-            foreach (var book in results)
+            if (books.Count == 0)
+            {
+                Console.WriteLine("No books in the library.");
+                return;
+            }
+            var sortedBooks = books.OrderBy(book => book.Year).ToList();
+
+            foreach (var book in sortedBooks)
             {
                 Console.WriteLine($"Title: {book.Title}, Author: {book.Author}, Year: {book.Year}, Genre: {book.Genre}");
             }
@@ -148,57 +189,19 @@ class Library
     }
 
 
-    public void DeleteBook(string input)
+    class Book
     {
-        if (string.IsNullOrEmpty(input))
-        {
-            Console.WriteLine("Book title cannot be empty.");
-            return;
-        }
-
-        var bookToDelete = books.FirstOrDefault(book => book.Title.Equals(input, StringComparison.OrdinalIgnoreCase));
-
-        if (bookToDelete != null)
-        {
-            books.Remove(bookToDelete);
-            Console.WriteLine($"The book \"{bookToDelete.Title}\" has been removed from the library.");
-        }
-        else
-        {
-            Console.WriteLine($"No book with the title \"{input}\" was found in the library.");
-        }
+        public string Title { get; set; }
+        public string Author { get; set; }
+        public int Year { get; set; }
+        public Genre Genre { get; set; }
     }
 
-
-    public void PrintSortedBooks()
+    enum Genre
     {
-        if (books.Count == 0)
-        {
-            Console.WriteLine("No books in the library.");
-            return;
-        }
-        var sortedBooks = books.OrderBy(book => book.Year).ToList();
-
-        foreach (var book in sortedBooks)
-        {
-            Console.WriteLine($"Title: {book.Title}, Author: {book.Author}, Year: {book.Year}, Genre: {book.Genre}");
-        }
+        fiction,
+        nonFiction,
+        science,
+        history
     }
-}
-
-
-class Book
-{
-    public string Title { get; set; }
-    public string Author { get; set; }
-    public int Year { get; set; }
-    public Genre Genre { get; set; }
-}
-
-enum Genre
-{
-    fiction,
-    nonFiction,
-    science,
-    history
 }
