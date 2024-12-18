@@ -1,0 +1,103 @@
+﻿namespace CafeOrderManagement
+{
+    internal class OrderManagement
+    {
+        private static List<Order> orders = new List<Order>();
+        private static int lastOrderId = 0;
+        private int GenerateId() => lastOrderId++;
+
+        private float OrderAmountCalculation(List<MenuItem> orderDetails)
+        {
+            float sum = 0;
+            foreach (var items in orderDetails)
+            {
+                sum += items.Price;
+            }
+            return sum;
+        }
+
+        public void AddOrder(Order newOrder, string customerName)
+        {
+            newOrder.Id = GenerateId();
+            newOrder.CustomerName = customerName;
+            newOrder.Status = OrderStatus.Pending;
+            List<MenuItem> orderDetails = newOrder.CreateOrderDetails(newOrder);
+            newOrder.Amount = OrderAmountCalculation(orderDetails);
+            newOrder.CreationTime = DateTime.Now;
+            orders.Add(newOrder);
+        }
+
+        public void UpdateOrderStatus(int orderId, OrderStatus newStatus)
+        {
+            var order = orders.FirstOrDefault(order => order.Id == orderId);
+            if (order != null)
+            {
+                if (order.Status == newStatus)
+                {
+                    Console.WriteLine("The order already has this status.");
+                }
+                else
+                {
+                    order.Status = newStatus;
+                    Console.WriteLine("Status of the order successfully changed.");
+                }
+                if (order.Status == OrderStatus.Cancelled)
+                {
+                    orders.Remove(order);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Order not found.");
+            }
+        }
+
+        public void FilteringByName(string customer)
+        {
+            List<Order> customerOrders = new List<Order>();
+            foreach (var order in orders)
+            {
+                if (order.CustomerName == customer)
+                {
+                    customerOrders.Add(order);
+                }
+            }
+            if (customerOrders.Count == 0)
+            {
+                Console.WriteLine("There is no such customer in the database.");
+            }
+            else
+            {
+                Console.WriteLine($"{customer} orders:");
+                foreach (var order in customerOrders)
+                {
+                    Console.WriteLine($"Order ID: {order.Id}, date: {order.CreationTime}, status: {order.Status}.");
+                }
+            }
+        }
+
+        public void FilteringByStatus(OrderStatus status)
+        {
+            List<Order> ordersByStatus = new List<Order>();
+            foreach (var order in orders)
+            {
+                if (order.Status == status)
+                {
+                    ordersByStatus.Add(order);
+                }
+            }
+            if (ordersByStatus.Count == 0)
+            {
+                Console.WriteLine("There are currently no orders with this status.");
+            }
+            else
+            {
+                Console.WriteLine($"Orders by status \"{status}\":");
+                foreach (var order in ordersByStatus)
+                {
+                    Console.WriteLine($"Customer name: {order.CustomerName}, order ID: {order.Id}, date: {order.CreationTime}.");
+                }
+            }
+        }
+    }
+}
