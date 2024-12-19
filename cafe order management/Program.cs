@@ -3,6 +3,48 @@
 OrderManagement orderManagement = new OrderManagement();
 MenuManagement menuManagement = new MenuManagement();
 
+Console.WriteLine("Order commands:\nAdd order\nUpdate order status\nSorting orders by customer\nSorting orders by status");
+Console.WriteLine("Menu commands: \nShow menu\nAdd menu item\nDelete menu item");
+Console.WriteLine("To finish enter \"End\".");
+bool running = true;
+string option;
+while (running)
+{
+    Console.Write("\nEnter command: ");
+    option = Console.ReadLine();
+    switch (option)
+    {
+        case "Add order":
+            AddOrder();
+            break;
+        case "Update order status":
+            UpdateOrderStatus();
+            break;
+        case "Sorting orders by customer":
+            FilteringByName();
+            break;
+        case "Sorting orders by status":
+            FilteringByStatus();
+            break;
+        case "Show menu":
+            menuManagement.ShowMenu();
+            break;
+        case "Add menu item":
+            AddMenuItem();
+            break;
+        case "Delete menu item":
+            MenuItemDeleting();
+            break;
+        case "End":
+            running = false;
+            Console.WriteLine("Exiting the program.");
+            break;
+        default:
+            Console.WriteLine("Invalid option. Please, try again.");
+            break;
+    }
+}
+
 void AddOrder()
 { 
     Order newOrder = new Order();
