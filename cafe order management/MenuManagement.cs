@@ -26,6 +26,7 @@
             }
             MenuItem newItem = new(item, price);
             menu.Add(newItem);
+            Console.WriteLine("New item successfully added.");
         }
 
         public void AddItemInTheProcess(string item, List<MenuItem> orderDetails)
@@ -44,14 +45,14 @@
 
         public void RemoveMenuItem(string name)
         {
-            if (MenuItemExists(name))
+            if (menu.Any(item => item.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
             {
-                menu.RemoveAll(item => item.Name == name);
+                menu.RemoveAll(item => item.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
                 Console.WriteLine("Item successfully removed from menu.");
             }
             else
             {
-                Console.WriteLine("A menu item with that name do not exists.");
+                Console.WriteLine("A menu item with that name does not exist.");
             }
         }
 
@@ -59,7 +60,7 @@
         {
             if (menu.Count == 0)
             {
-                Console.WriteLine("There is no item in the menu.");
+                Console.WriteLine("The menu is currently empty.");
             }
             else
             {
@@ -69,11 +70,6 @@
                     Console.WriteLine($"{item.Name} - {item.Price} $");
                 }
             }
-        }
-
-        private bool MenuItemExists(string name)
-        {
-            return menu.Any(item => item.Name == name);
         }
     }
 }

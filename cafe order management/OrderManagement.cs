@@ -3,7 +3,7 @@
     internal class OrderManagement
     {
         private static List<Order> orders = new List<Order>();
-        private static int lastOrderId = 0;
+        private static int lastOrderId = 1;
         private int GenerateId() => lastOrderId++;
 
         private float OrderAmountCalculation(List<MenuItem> orderDetails)
@@ -59,7 +59,7 @@
             }
         }
 
-        public void FilteringByName(string customer)
+        public void FilterOrdersByCustomerName(string customer)
         {
             List<Order> customerOrders = new List<Order>();
             foreach (var order in orders)
@@ -83,7 +83,7 @@
             }
         }
 
-        public void FilteringByStatus(OrderStatus status)
+        public void FilterOrdersByStatus(OrderStatus status)
         {
             List<Order> ordersByStatus = new List<Order>();
             foreach (var order in orders)

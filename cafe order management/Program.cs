@@ -3,8 +3,8 @@
 OrderManagement orderManagement = new OrderManagement();
 MenuManagement menuManagement = new MenuManagement();
 
-Console.WriteLine("Order commands:\nAdd order\nUpdate order status\nSorting orders by customer\nSorting orders by status");
-Console.WriteLine("Menu commands: \nShow menu\nAdd menu item\nDelete menu item");
+Console.WriteLine("Order commands:\nAdd order\nUpdate order status\nSorting orders by customer\nSorting orders by status\n");
+Console.WriteLine("Menu commands: \nShow menu\nAdd menu item\nDelete menu item\n");
 Console.WriteLine("To finish enter \"End\".");
 bool running = true;
 string option;
@@ -12,36 +12,43 @@ while (running)
 {
     Console.Write("\nEnter command: ");
     option = Console.ReadLine();
-    switch (option)
+
+    if (option.Equals("Add order", StringComparison.OrdinalIgnoreCase))
     {
-        case "Add order":
-            AddOrder();
-            break;
-        case "Update order status":
-            UpdateOrderStatus();
-            break;
-        case "Sorting orders by customer":
-            FilteringByName();
-            break;
-        case "Sorting orders by status":
-            FilteringByStatus();
-            break;
-        case "Show menu":
-            menuManagement.ShowMenu();
-            break;
-        case "Add menu item":
-            AddMenuItem();
-            break;
-        case "Delete menu item":
-            MenuItemDeleting();
-            break;
-        case "End":
-            running = false;
-            Console.WriteLine("Exiting the program.");
-            break;
-        default:
-            Console.WriteLine("Invalid option. Please, try again.");
-            break;
+        AddOrder();
+    }
+    else if (option.Equals("Update order status", StringComparison.OrdinalIgnoreCase))
+    {
+        UpdateOrderStatus();
+    }
+    else if (option.Equals("Sorting orders by customer", StringComparison.OrdinalIgnoreCase))
+    {
+        FilterOrdersByCustomerName();
+    }
+    else if (option.Equals("Sorting orders by status", StringComparison.OrdinalIgnoreCase))
+    {
+        FilterOrdersByStatus();
+    }
+    else if (option.Equals("Show menu", StringComparison.OrdinalIgnoreCase))
+    {
+        menuManagement.ShowMenu();
+    }
+    else if (option.Equals("Add menu item", StringComparison.OrdinalIgnoreCase))
+    {
+        AddMenuItem();
+    }
+    else if (option.Equals("Delete menu item", StringComparison.OrdinalIgnoreCase))
+    {
+        MenuItemDeleting();
+    }
+    else if (option.Equals("End", StringComparison.OrdinalIgnoreCase))
+    {
+        running = false;
+        Console.WriteLine("Exiting the program.");
+    }
+    else
+    {
+        Console.WriteLine("Invalid option. Please, try again.");
     }
 }
 
@@ -54,7 +61,7 @@ void AddOrder()
 
     orderManagement.AddOrder(newOrder, menuManagement, customerName);
 
-    Console.WriteLine($"Order for {newOrder.CustomerName} created successfully.");
+    Console.WriteLine($"Order #{newOrder.Id} for {newOrder.CustomerName} created successfully.");
     Console.WriteLine($"Total amount: ${newOrder.Amount:F2}");
     Console.WriteLine("Order details:");
     foreach (var detail in newOrder.Details)
@@ -71,56 +78,64 @@ void UpdateOrderStatus()
     {
         Console.WriteLine("ID must be a positive integer. Enter the order ID:");
     }
-    Console.WriteLine("Enter a number of a new order status (1 - Pending; 2 - InProgress; 3 - Completed; 4 - Cancelled) :");
-    int status;
-    while (!int.TryParse(Console.ReadLine(), out status) || status < 1 || status > 4)
-    {
-        Console.WriteLine("Order status does not exist. Please try again.");
-    }
-
+    Console.WriteLine("Enter a new order status :");
+    string status = Console.ReadLine();
     OrderStatus newStatus = new OrderStatus();
-    switch (status)
+    if (status.Equals("Pending", StringComparison.OrdinalIgnoreCase))
     {
-        case 1:
-            newStatus = OrderStatus.Pending;
-            break;
-        case 2: 
-            newStatus = OrderStatus.InProgress;
-            break;
-        case 3:
-            newStatus = OrderStatus.Completed;
-            break;
-        case 4:
-            newStatus = OrderStatus.Cancelled;
-            break;
+        newStatus = OrderStatus.Pending;
+    }
+    else if (status.Equals("InProgress", StringComparison.OrdinalIgnoreCase))
+    {
+        newStatus = OrderStatus.InProgress;
+    }
+    else if (status.Equals("Completed", StringComparison.OrdinalIgnoreCase))
+    {
+        newStatus = OrderStatus.Completed;
+    }
+    else if (status.Equals("Cancelled", StringComparison.OrdinalIgnoreCase)) 
+    {
+        newStatus = OrderStatus.Cancelled;
+    }
+    else
+    {
+        Console.WriteLine("Invalid status entered. Please try again.");
+        return; 
     }
     orderManagement.UpdateOrderStatus(id, newStatus);
 }
 
-void FilteringByName ()
+void FilterOrdersByCustomerName ()
 {
     Console.WriteLine("Enter the name of customer:");
     string customerName = Console.ReadLine();
-    orderManagement.FilteringByName(customerName);
+    orderManagement.FilterOrdersByCustomerName(customerName);
 }
 
-void FilteringByStatus()
+void FilterOrdersByStatus()
 {
-    Console.WriteLine("Enter a new order status:");
     string input;
-    bool flag = false;
-    while (!flag)
+    bool flag = true;
+    while (flag)
     {
+        Console.WriteLine("Enter order status:");
         input = Console.ReadLine();
-        if (Enum.TryParse(typeof(OrderStatus), input, true, out var result) && Enum.IsDefined(typeof(OrderStatus), result))
+        if (Enum.TryParse(typeof(OrderStatus), input, true, out var result))
         {
-            flag = true;
-            var newStatus = (OrderStatus)result; 
-            orderManagement.FilteringByStatus(newStatus);
+            var newStatus = (OrderStatus)result;
+            if (Enum.IsDefined(typeof(OrderStatus), newStatus))
+            {
+                flag = false;
+                orderManagement.FilterOrdersByStatus(newStatus);
+            }
+            else
+            {
+                Console.WriteLine("This status is invalid. Please try again.");
+            }
         }
-        else 
+        else
         {
-            Console.WriteLine("This status does not exist. Try again.");
+            Console.WriteLine("Invalid input. Try again.");
         }
     }
 }
