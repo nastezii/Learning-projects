@@ -9,7 +9,7 @@
         public DateTime CreationTime { get; set; }
         public OrderStatus Status { get; set; }
 
-        public List<MenuItem> CreateOrderDetails(Order newOrder)
+        public List<MenuItem> CreateOrderDetails(Order newOrder,MenuManagement menuManagement)
         {
             List<MenuItem> orderDetails = new List<MenuItem>();
             bool flag = true;
@@ -31,7 +31,20 @@
                 }
                 else
                 {
-                    menuItem.AddMenuItem(item, orderDetails);
+                    Console.WriteLine("This item is not on the menu. Do you want to add a new item to the menu? Enter Yes/No");
+                    string input = Console.ReadLine();
+                    if (input.Equals("Yes", StringComparison.OrdinalIgnoreCase))
+                    {
+                        menuManagement.AddItemInTheProcess(item, orderDetails);
+                    }
+                    else if (input.Equals("No", StringComparison.OrdinalIgnoreCase))
+                    {
+                        Console.WriteLine("Item not added to the menu.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid input. Skipping this item.");
+                    }
                 }
             }
             return orderDetails;

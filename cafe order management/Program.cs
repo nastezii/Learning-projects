@@ -10,7 +10,7 @@ void AddOrder()
     Console.WriteLine("Enter the name of customer:");
     string customerName = Console.ReadLine();
 
-    orderManagement.AddOrder(newOrder, customerName);
+    orderManagement.AddOrder(newOrder, menuManagement, customerName);
 
     Console.WriteLine($"Order for {newOrder.CustomerName} created successfully.");
     Console.WriteLine($"Total amount: ${newOrder.Amount:F2}");
@@ -83,6 +83,19 @@ void FilteringByStatus()
     }
 }
 
+void AddMenuItem()
+{
+    Console.WriteLine("Enter the name of the menu position:");
+    string item = Console.ReadLine();
+    menuManagement.AddMenuItem(item);
+}
+
+void MenuItemDeleting()
+{
+    Console.WriteLine("Enter the name of the menu position:");
+    string item = Console.ReadLine();
+    menuManagement.RemoveMenuItem(item);
+}
 
 public enum OrderStatus
 {

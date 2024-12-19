@@ -2,19 +2,44 @@
 {
     internal class MenuManagement
     {
-        public static List<MenuItem> menu = new List<MenuItem>();
-        public void AddMenuItem(string name, float price)
+        public static List<MenuItem> menu = new List<MenuItem>
         {
-            if (MenuItemExists(name))
+            new MenuItem { Name = "Coffee", Price = 2.50f },
+            new MenuItem { Name = "Tea", Price = 1.99f },
+            new MenuItem { Name = "Juice", Price = 2.99f },
+            new MenuItem { Name = "Soda", Price = 1.50f },
+            new MenuItem { Name = "Pizza", Price = 8.99f },
+            new MenuItem { Name = "Pasta", Price = 6.99f },
+            new MenuItem { Name = "Burger", Price = 7.49f },
+            new MenuItem { Name = "Salad", Price = 5.99f },
+            new MenuItem { Name = "Steak", Price = 12.99f },
+            new MenuItem { Name = "Ice Cream", Price = 3.99f }
+        };
+
+        public void AddMenuItem(string item)
+        {
+            float price;
+            Console.WriteLine("Enter the price of the new item:");
+            while (!float.TryParse(Console.ReadLine(), out price) || price < 0)
             {
-                Console.WriteLine("A menu item with that name already exists. New item not added.");
+                Console.WriteLine("Invalid price. Please enter a positive number:");
             }
-            else
+            MenuItem newItem = new(item, price);
+            menu.Add(newItem);
+        }
+
+        public void AddItemInTheProcess(string item, List<MenuItem> orderDetails)
+        {
+            float price;
+            Console.WriteLine("Enter the price of the new item:");
+            while (!float.TryParse(Console.ReadLine(), out price) || price < 0)
             {
-                MenuItem newItem = new MenuItem(name, price);
-                menu.Add(newItem);
-                Console.WriteLine("Item successfully added to the menu.");
+                Console.WriteLine("Invalid price. Please enter a positive number:");
             }
+            MenuItem newItem = new(item, price);
+            orderDetails.Add(newItem);
+            menu.Add(newItem);
+            Console.WriteLine("New item successfully added.");
         }
 
         public void RemoveMenuItem(string name)

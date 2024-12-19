@@ -16,12 +16,23 @@
             return sum;
         }
 
-        public void AddOrder(Order newOrder, string customerName)
+        private float DayAmountCalculation()
         {
+            float sum = 0;
+            foreach (var order in orders)
+            {
+                sum += order.Amount;
+            }
+            return sum;
+        }
+
+        public void AddOrder(Order newOrder, MenuManagement menuManagament, string customerName)
+        {
+            List<MenuItem> orderDetails = newOrder.CreateOrderDetails(newOrder, menuManagament);
             newOrder.Id = GenerateId();
             newOrder.CustomerName = customerName;
             newOrder.Status = OrderStatus.Pending;
-            List<MenuItem> orderDetails = newOrder.CreateOrderDetails(newOrder);
+            newOrder.Details = orderDetails;
             newOrder.Amount = OrderAmountCalculation(orderDetails);
             newOrder.CreationTime = DateTime.Now;
             orders.Add(newOrder);
@@ -40,10 +51,6 @@
                 {
                     order.Status = newStatus;
                     Console.WriteLine("Status of the order successfully changed.");
-                }
-                if (order.Status == OrderStatus.Cancelled)
-                {
-                    orders.Remove(order);
                 }
             }
             else
