@@ -5,6 +5,7 @@ MenuManagement menuManagement = new MenuManagement();
 
 Console.WriteLine("Order commands:\nAdd order\nUpdate order status\nSorting orders by customer\nSorting orders by status\n");
 Console.WriteLine("Menu commands: \nShow menu\nAdd menu item\nDelete menu item\n");
+Console.WriteLine("To create a report enter \"Create a report\"");
 Console.WriteLine("To finish enter \"End\".");
 bool running = true;
 string option;
@@ -40,6 +41,12 @@ while (running)
     else if (option.Equals("Delete menu item", StringComparison.OrdinalIgnoreCase))
     {
         MenuItemDeleting();
+    }
+    else if (option.Equals("Create a report", StringComparison.OrdinalIgnoreCase))
+    {
+        Console.WriteLine("Enter the file name:");
+        string fileName = Console.ReadLine();
+        orderManagement.CreateReport(fileName);
     }
     else if (option.Equals("End", StringComparison.OrdinalIgnoreCase))
     {

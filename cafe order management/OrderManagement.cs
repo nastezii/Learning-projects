@@ -21,9 +21,24 @@
             float sum = 0;
             foreach (var order in orders)
             {
-                sum += order.Amount;
+                if (order.Status != OrderStatus.Cancelled){sum += order.Amount;}
             }
             return sum;
+        }
+
+        public void CreateReport(string fileName)
+        { 
+            float totalAmount = DayAmountCalculation();
+            using (var writer = new StreamWriter(fileName))
+            {
+                writer.WriteLine("Order id,Customer name,Order amount,Status");
+                foreach (var order in orders)
+                {
+                    writer.WriteLine($"{order.Id},{order.CustomerName},{order.Amount},{order.Status}");
+                }
+                writer.WriteLine($"Total: {totalAmount}");
+            }
+            Console.WriteLine($"Report saved to {fileName}");
         }
 
         public void AddOrder(Order newOrder, MenuManagement menuManagament, string customerName)
